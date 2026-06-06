@@ -1,0 +1,434 @@
+model User {
+  id                     String      @id @default(cuid())
+  name                   String?
+  email                  String      @unique
+  username               String      @unique
+  password               String?
+  instituteName          String?
+  directorName           String?
+  mobileNumber           String?
+  gender                 String?
+  nationality            String?
+  instituteAge           String?
+  religion               String?
+  fullAddress            String?
+  village                String?
+  postOffice             String?
+  thanaUpazila           String?
+  district               String?
+  fatherName             String?
+  motherName             String?
+  courseName             String?
+  duration               String?
+  startYear              String?
+  startMonth             String?
+  endYear                String?
+  endMonth               String?
+  educationQualification String?
+  directorPhoto          String?
+  institutePhoto         String?
+  nationalIdPhoto        String?
+  signaturePhoto         String?
+  emailVerified          Boolean     @default(false)
+  needPasswordChange     Boolean     @default(true)
+  isDeleted              Boolean     @default(false)
+  deletedAt              DateTime?
+  role                   Role        @default(USER)
+  status                 UserStatus  @default(PENDING)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  branchId               String?     @unique
+  accounts               Account[]
+  mediaFiles             MediaFile[]
+  sessions               Session[]
+  students               Student[]
+  questions              Question[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Success {
+  id        String   @id @default(cuid())
+  name      String
+  image     String
+  position  Json
+  items     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("success")
+}
+
+model Testimonials {
+  id        String   @id @default(cuid())
+  name      String
+  image     String
+  position  Json
+  items     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model Instructors {
+  id        String   @id @default(cuid())
+  name      String
+  image     String
+  position  Json
+  items     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("instructors")
+}
+
+model InfoCard {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("info_card")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+  phone     String?
+  subject   String?
+
+  @@map("contact_messages")
+}
+
+model Card {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String?
+  image     String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cards")
+}
+
+model Footer {
+  id          String   @id @default(cuid())
+  footerImage String
+  content     Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("footer")
+}
+
+model Course {
+  id         String @id @default(cuid())
+  thumbnail  String
+  title      String
+  instructor String @default("Onecontributor")
+
+  rating       Float    @default(0.0)
+  totalReviews Int      @default(0)
+  isPublished  Boolean  @default(true)
+  categoryId   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  category     Category @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+}
+
+model Category {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  courses Course[]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+  PENDING
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  questionText String
+  options      Option[]
+  mark         Int      @default(1)
+  createdAt    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  text       String
+  isCorrect  Boolean  @default(false)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model ExamAttempt {
+  id           String       @id @default(cuid())
+  studentId    String
+  student      Student      @relation(fields: [studentId], references: [id])
+  score        Int
+  totalMarks   Int
+  lastAttempt  DateTime     @default(now()) @updatedAt
+  canRetry     Boolean      @default(false)
+  attemptCount Int          @default(1)
+  answers      ExamAnswer[]
+  createdAt    DateTime     @default(now())
+}
+
+model ExamAnswer {
+  id             String      @id @default(cuid())
+  examAttemptId  String
+  examAttempt    ExamAttempt @relation(fields: [examAttemptId], references: [id], onDelete: Cascade)
+  questionId     String
+  selectedOption String
+  isCorrect      Boolean
+}
+
+model MediaFile {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String?
+  size      Int?
+  createdAt DateTime @default(now())
+  ownerId   String?
+  owner     User?    @relation(fields: [ownerId], references: [id])
+
+  @@map("media_files")
+}
+
+model HomeSlider {
+  id        String   @id @default(cuid())
+  image     String
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("home_slider")
+}
+
+model notice {
+  id        String   @id @default(cuid())
+  text      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notices")
+}
+
+model HeroImageText {
+  id        String   @id @default(cuid())
+  image     String
+  name      String?
+  title     String?
+  text      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("hero_image_text")
+}
+
+model AboutSection {
+  id        String   @id @default(cuid())
+  image     String
+  name      String?
+  title     String?
+  text      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("about_section")
+}
+
+model Pdf {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String
+  fileSize    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([title])
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Student {
+  id                     String        @id @default(cuid())
+  name                   String
+  email                  String        @unique
+  picture                String        @unique
+  studentId              String        @unique
+  roll                   String        @unique
+  regNumber              String        @unique
+  guardianPhone          String?
+  issueDate              DateTime?
+  expireDate             DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  directorName           String?
+  district               String?
+  dob                    DateTime?
+  duration               String?
+  educationQualification String?
+  fatherName             String?
+  gender                 String?
+  institute              String?
+  month1                 String?
+  month2                 String?
+  motherName             String?
+  passport               String?
+  studentAddress         String?
+  thana                  String?
+  userId                 String?
+  year1                  String?
+  year2                  String?
+  examAllowed            Boolean       @default(false)
+  marks                  Mark[]
+  user                   User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examAttempts           ExamAttempt[]
+
+  @@map("students")
+}
+
+model Mark {
+  id            String    @id @default(cuid())
+  semesterTitle String
+  totalCredit   Float
+  totalPoints   Float
+  cgpa          Float
+  grade         String
+  status        String
+  studentId     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subjects      Subject[]
+
+  @@map("marks")
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  subjectCode String
+  subjectName String
+  credit      Float
+  written     Float    @default(0)
+  practical   Float    @default(0)
+  viva        Float    @default(0)
+  totalMarks  Float
+  fullMark    Float    @default(0)
+  gradePoint  Float
+  grade       String
+  markId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  mark        Mark     @relation(fields: [markId], references: [id], onDelete: Cascade)
+
+  @@unique([subjectCode, markId])
+  @@map("subjects")
+}
+
+model TaskData {
+  id        String   @id @default(cuid())
+  title     String
+  link      String
+  text      String
+  time      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompleteNewData {
+  id        String   @id @default(cuid())
+  title     String
+  text      String
+  date      String
+  pdfUrl    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SendPublicStudent {
+  id        String   @id @default(cuid())
+  title     String
+  text      String
+  date      String
+  pdfUrl    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
