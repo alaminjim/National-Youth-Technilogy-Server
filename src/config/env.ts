@@ -63,17 +63,16 @@ const loadEnvVars = (): EnvConfig => {
 
   requiredEnvVars.forEach((varName) => {
     if (!process.env[varName]) {
-            throw new AppError(
+      throw new AppError(
         status.INTERNAL_SERVER_ERROR,
         `Environment variable ${varName} is required but not set in .env file.`,
       );
-      
     }
   });
 
   return {
     APP_NAME:
-      process.env.APP_NAME || "Bangladesh Technical Education Technology",
+      process.env.APP_NAME || "Bangladesh National Youth Technical Institute",
     APP_URL: process.env.APP_URL as string,
     DATABASE_URL: process.env.DATABASE_URL as string,
     FRONTEND_URL: process.env.FRONTEND_URL as string,
