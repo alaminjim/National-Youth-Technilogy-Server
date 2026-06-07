@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+src/generated/
 
 # Environment
 .env*
@@ -21,3 +22,4 @@ yarn-error.log*
 
 # TypeScript
 *.tsbuildinfo
+.vercel
