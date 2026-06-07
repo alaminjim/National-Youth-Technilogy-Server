@@ -100,6 +100,13 @@ export const studentsService = {
       institute: student.institute,
       directorName: student.directorName,
       marks: student.marks,
+      month1: student.month1,
+      month2: student.month2,
+      year1: student.year1,
+      year2: student.year2,
+      issueDate: student.issueDate,
+      expireDate: student.expireDate,
+      joinedDate: student.issueDate,
     };
   },
 
