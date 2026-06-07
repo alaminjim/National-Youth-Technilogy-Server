@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authorize } from "../../shared/middlewares/authorize.middleware";
-import { Role } from "../../generated/prisma";
+import { Role } from "@prisma/client";
 import { createAboutSection, deleteAboutSection, getAboutSection, updateAboutSection } from "./aboutsection.controller";
 const router = Router();
 

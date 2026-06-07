@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { TaskDataController } from './task-data.controller';
-import { Role } from '../../generated/prisma';
+import { Role } from "@prisma/client";
 import { authorize } from '../../shared/middlewares/authorize.middleware';
 
 

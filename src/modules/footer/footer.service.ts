@@ -1,5 +1,5 @@
 import { prisma } from "../../database/prisma";
-import { Prisma } from "../../generated/prisma";
+import { Prisma } from "@prisma/client";
 
 export const footerService = {
   create: async (data: {

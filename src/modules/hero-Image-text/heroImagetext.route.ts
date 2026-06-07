@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authorize } from "../../shared/middlewares/authorize.middleware";
-import { Role } from "../../generated/prisma";
+import { Role } from "@prisma/client";
 import { createHeroImageText, deleteHeroImageText, getHeroImageText, updateHeroImageText } from "./heroImagetext.controller";
 const router = Router();
 router.get("/get-hero-image-texts", getHeroImageText);

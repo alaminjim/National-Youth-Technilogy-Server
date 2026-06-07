@@ -11,7 +11,7 @@ import {
   updateCourse,
 } from "./courses.controller";
 import { authorize } from "../../shared/middlewares/authorize.middleware";
-import { Role } from "../../generated/prisma";
+import { Role } from "@prisma/client";
 
 const router = Router();
 // router.use(authorize(Role.ADMIN));

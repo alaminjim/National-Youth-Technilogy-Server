@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createSlider, deleteSlider, getSliders, updateSlider } from "./slider.controller";
 import { authorize } from "../../shared/middlewares/authorize.middleware";
-import { Role } from "../../generated/prisma";
+import { Role } from "@prisma/client";
 
 const router = Router();
 router.get("/get-slider", getSliders);
